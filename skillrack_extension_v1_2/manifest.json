@@ -1,13 +1,8 @@
-"browser_specific_settings": {
-  "gecko": {
-    "id": "skillrack@local"
-  }
-}
 {
   "manifest_version": 2,
   "name": "SkillRack extension",
   "version": "1.2",
-  "description": "SkillRack extension v1.2 \u2014 ACE injection runs in page context and returns result.",
+  "description": "SkillRack extension v1.2 — ACE injection runs in page context and returns result.",
   "permissions": [
     "activeTab",
     "storage"
@@ -15,12 +10,12 @@
   "browser_action": {
     "default_popup": "popup.html",
     "default_title": "SkillRack extension"
-  },
+  ],
   "background": {
     "scripts": [
       "background.js"
     ]
-  },
+  ],
   "content_scripts": [
     {
       "matches": [
@@ -35,9 +30,10 @@
   "icons": {
     "48": "icons/icon-48.png"
   },
-  "applications": {
+
+  "browser_specific_settings": {
     "gecko": {
-      "id": "skillrack-extension@example.com"
+      "id": "skillrack@local"
     }
   }
 }
