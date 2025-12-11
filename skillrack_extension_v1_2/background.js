@@ -1,1 +1,0 @@
-console.log("SkillRack extension background loaded (v1.2).");
