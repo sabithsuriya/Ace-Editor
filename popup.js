@@ -39,7 +39,11 @@ document.addEventListener('DOMContentLoaded', function() {
     const enabled = copyToggle.checked;
     chrome.storage.sync.set({ enableCopy: enabled }, function() {
       if (enabled) {
-        applyToActiveTab({ type: 'enable_copy' });
+        applyToActiveTab({ type: 'enable_copy' }, function(res) {
+          if (res && res.message) {
+            setStatus(res.message);
+          }
+        });
       } else {
         applyToActiveTab({ type: 'disable_copy' });
         setStatus('Copy Mode: OFF');

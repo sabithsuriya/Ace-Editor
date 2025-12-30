@@ -139,12 +139,113 @@
     injectScriptAndWait(code, true, callback);
   }
 
+  // Force Copy integration - inject script into page context
+  function initializeForceCopy() {
+    try {
+      if (window.rZ7agds0y5 && typeof window.rZ7agds0y5 === 'function') {
+        // Inject into page context
+        var script = document.createElement('script');
+        script.type = 'text/javascript';
+        var code = ';(' + window.rZ7agds0y5.toString() + ')();';
+        script.textContent = code;
+        (document.head || document.documentElement).appendChild(script);
+        script.remove();
+      }
+    } catch(e) {
+      console.log('Force Copy initialization:', e);
+    }
+  }
+
+  // Enhanced copy enable with Force Copy support
+  function enableCopyWithForceCopy(once) {
+    try {
+      // Inject message to page context for Force Copy
+      var injectCode = "(function() {" +
+        "try {" +
+        "  var event = new CustomEvent('sfNwUGvKFL', {" +
+        "    detail: JSON.stringify({" +
+        "      type: '__COPY_TYPE__CI__'," +
+        "      payload: 'START'" +
+        "    })" +
+        "  });" +
+        "  window.dispatchEvent(event);" +
+        "} catch(e) {}" +
+        "})();";
+      
+      injectScriptAndWait(injectCode, false, function() {});
+      
+      // Store in session (once) or local storage
+      try {
+        if (once) {
+          sessionStorage.setItem('__COPY____STORAGE__', JSON.stringify({
+            origin: true,
+            expire: null
+          }));
+        } else {
+          localStorage.setItem('__COPY____STORAGE__', JSON.stringify({
+            origin: true,
+            expire: null
+          }));
+        }
+      } catch(e) {}
+      
+      // Also apply basic copy enable
+      enableCopyAndContext();
+      
+      return {status: "ok", message: "Copy enabled" + (once ? " (once)" : "")};
+    } catch (err) {
+      // Fallback to basic copy enable
+      enableCopyAndContext();
+      return {status: "ok", message: "Copy enabled (basic mode)"};
+    }
+  }
+
+  function disableCopyWithForceCopy() {
+    try {
+      // Inject disable message to page context for Force Copy
+      var injectCode = "(function() {" +
+        "try {" +
+        "  var event = new CustomEvent('sfNwUGvKFL', {" +
+        "    detail: JSON.stringify({" +
+        "      type: '__COPY_TYPE__CI__'," +
+        "      payload: 'CLOSE'" +
+        "    })" +
+        "  });" +
+        "  window.dispatchEvent(event);" +
+        "} catch(e) {}" +
+        "})();";
+      
+      injectScriptAndWait(injectCode, false, function() {});
+      
+      // Remove storage
+      try {
+        sessionStorage.removeItem('__COPY____STORAGE__');
+        localStorage.removeItem('__COPY____STORAGE__');
+      } catch(e) {}
+      
+      // Also disable basic copy
+      disableCopy();
+      
+      return {status: "ok", message: "Copy disabled"};
+    } catch (err) {
+      disableCopy();
+      return {status: "ok", message: "Copy disabled"};
+    }
+  }
+
+  // Initialize Force Copy on load
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initializeForceCopy);
+  } else {
+    initializeForceCopy();
+  }
+
   // Apply stored settings on load
   try {
     if (chrome && chrome.storage && chrome.storage.sync) {
       chrome.storage.sync.get({ enableCopy: true, enableEdit: false }, function(items) {
         if (items.enableCopy) {
-          enableCopyAndContext();
+          enableCopyWithForceCopy(false);
         }
         setEditingEnabled(!!items.enableEdit);
       });
@@ -155,10 +256,10 @@
   chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     if (!request || !request.type) return;
     if (request.type === 'enable_copy') {
-      var res = enableCopyAndContext();
+      var res = enableCopyWithForceCopy(false);
       sendResponse(res);
     } else if (request.type === 'disable_copy') {
-      var res = disableCopy();
+      var res = disableCopyWithForceCopy();
       sendResponse(res);
     } else if (request.type === 'enable_edit') {
       var res = setEditingEnabled(!!request.enabled);
