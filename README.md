@@ -28,7 +28,7 @@ This extension works **only on Firefox** and is loaded as a **temporary extensio
 1. Download the project **ZIP file**
 2. **Extract / Unzip** the files
 3. Open Firefox and go to:
-   about:config
+   about:debugging
 4. Click **“This Firefox”**
 5. Click **“Load Temporary Add-on”**
 6. Select the `manifest.json` file from the extracted folder
