@@ -1,0 +1,52 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Ace Editor</title>
+    <style>
+      :root {
+        --bg: #0f0f0f;
+        --surface: #1b1b1b;
+        --primary: #00b7ff;
+        --text: #e5e5e5;
+        --muted: #777;
+      }
+      html, body { width: 100%; height: 100%; margin: 0; padding: 0; background: var(--bg); color: var(--text); font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial; }
+      body { width: 400px; height: 480px; box-sizing: border-box; display: flex; flex-direction: column; padding: 16px; overflow: hidden; }
+      h3 { text-align: center; color: var(--primary); margin: 0 0 12px; letter-spacing: 0.5px; flex-shrink: 0; }
+      textarea { flex: 1; min-height: 120px; max-height: 200px; width: 98%; resize: none; font-family: monospace; background: var(--surface); color: var(--text); border: 1px solid #333; border-radius: 1px; padding: 10px; outline: none; transition: border-color 0.3s; }
+      textarea:focus { border-color: var(--primary); }
+      .row { display: flex; gap: 10px; margin-top: 12px; flex-shrink: 0; }
+      button { flex: 1; padding: 10px 12px; border-radius: 6px; border: none; background: var(--primary); color: white; cursor: pointer; font-weight: 500; transition: all 0.3s; }
+      button:hover { box-shadow: 0 0 8px var(--primary); transform: translateY(-1px); }
+      button.secondary { background: var(--muted); }
+      #status { margin-top: 12px; font-size: 0.9em; color: var(--muted); text-align: center; flex-shrink: 0; }
+      .toggle-wrapper { display: flex; align-items: center; justify-content: space-between; margin-top: 12px; background: var(--surface); padding: 10px 14px; border-radius: 6px; border: 1px solid #222; flex-shrink: 0; }
+      .toggle-label { font-size: 0.95em; color: var(--text); }
+      .switch { position: relative; display: inline-block; width: 46px; height: 26px; }
+      .switch input { opacity: 0; width: 0; height: 0; }
+      .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #555; transition: 0.4s; border-radius: 26px; }
+      .slider:before { position: absolute; content: ""; height: 20px; width: 20px; left: 3px; bottom: 3px; background-color: white; transition: 0.4s; border-radius: 50%; }
+      input:checked + .slider { background-color: var(--primary); box-shadow: 0 0 10px var(--primary); }
+      input:checked + .slider:before { transform: translateX(20px); }
+    </style>
+  </head>
+  <body>
+    <h3>Ace Editor</h3>
+    <textarea id="inputText" placeholder="Type the input text..."></textarea>
+    <div class="row">
+      <button id="run">Paste code</button>
+      <button id="clear" class="secondary">Clear</button>
+    </div>
+    <div class="toggle-wrapper">
+      <span class="toggle-label">Enable Copy</span>
+      <label class="switch"><input type="checkbox" id="enableCopy" checked><span class="slider"></span></label>
+    </div>
+    <div class="toggle-wrapper">
+      <span class="toggle-label">Enable Editing</span>
+      <label class="switch"><input type="checkbox" id="enableEdit"><span class="slider"></span></label>
+    </div>
+    <div id="status">Ready</div>
+    <script src="popup.js"></script>
+  </body>
+</html>
