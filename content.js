@@ -148,17 +148,18 @@
                "      if(!id){ id = 'skillrack_ace_' + Math.random().toString(36).slice(2); editorEl.id = id; }\n" +
                "      var editor = window.ace.edit(id);\n" +
                "      if(!editor){ throw new Error('ace.edit returned falsy'); }\n" +
-               "      // Use the proven injection logic to avoid line issues with long code\n" +
+               "      // FIXED: Character-by-character insertion to preserve formatting and avoid line limits\n" +
                "      editor.$blockScrolling = Infinity;\n" +
                "      var CODE = input;\n" +
-               "      var X = CODE.split(' ');\n" +
                "      editor.setValue('');\n" +
-               "      for(var i=0;i<X.length;i++){\n" +
-               "        editor.insert(X[i] + ' ');\n" +
-               "        var row = editor.session.getLength() - 1;\n" +
-               "        var column = editor.session.getLine(row).length;\n" +
-               "        editor.gotoLine(row + 1, column);\n" +
+               "      // Insert character by character to preserve all formatting, indentation, and strings\n" +
+               "      for(var i=0; i<CODE.length; i++){\n" +
+               "        editor.insert(CODE[i]);\n" +
                "      }\n" +
+               "      // Move cursor to end\n" +
+               "      var row = editor.session.getLength() - 1;\n" +
+               "      var column = editor.session.getLine(row).length;\n" +
+               "      editor.gotoLine(row + 1, column);\n" +
                "      window.postMessage({__skillrack_injection__:true, result: {status:'ok', message:'Inserted into ACE editor.'}}, '*');\n" +
                "    }catch(e){\n" +
                "      window.postMessage({__skillrack_injection__:true, result: {status:'error', message: String(e)}}, '*');\n" +
